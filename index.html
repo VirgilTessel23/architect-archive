@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Architect Archive</title>
+<style>
+  :root{
+    --bg:#ffffff;
+    --fg:#0b0b0b;
+    --muted:#666666;
+    --accent:#b30000;
+  }
+  html,body{
+    height:100%;
+    margin:0;
+    background:var(--bg);
+    color:var(--fg);
+    font-family: "Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-weight:800;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+  }
+  .container{max-width:920px;margin:36px auto;padding:28px;box-sizing:border-box}
+  header{text-align:center;margin-bottom:20px}
+  h1{margin:0;font-size:28px;letter-spacing:0.08em}
+  .obf{display:inline-block;font-weight:900;font-size:34px;letter-spacing:0.12em;user-select:none;white-space:pre;cursor:default;transition:text-shadow 180ms ease}
+  .subtitle{margin-top:10px;color:var(--muted);font-size:14px;font-weight:800}
+  main{margin-top:18px;background:#fbfbfb;border-radius:8px;padding:18px;box-shadow:0 6px 18px rgba(10,10,10,0.06);border:1px solid rgba(0,0,0,0.04)}
+  p{margin:0 0 12px 0;line-height:1.4;font-size:15px;font-weight:800}
+  .download{display:inline-block;margin-top:12px;padding:8px 14px;border-radius:6px;border:2px solid #0b84ff;color:#0b84ff;text-decoration:none;font-weight:900}
+  .download:hover{background:#0b84ff;color:#fff}
+  .whisper{margin-top:20px;font-size:16px;font-weight:900;color:var(--accent);letter-spacing:0.08em;user-select:none;white-space:pre-wrap;cursor:default}
+  footer{margin-top:36px;text-align:center;color:var(--muted);font-size:13px;font-weight:800}
+  @media(max-width:640px){.obf{font-size:26px}h1{font-size:20px}}
+  .pulse-true{ color:var(--fg); text-shadow:0 0 18px rgba(0,0,0,0.08); }
+</style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1><span id="archWrap" class="obf">ARCHITECT</span> PROTOCOL ARCHIVE</h1>
+      <div class="subtitle">Recovered build snapshot — DO NOT DISTRIBUTE WITHOUT APPROVAL</div>
+    </header>
+
+    <main>
+      <p>
+        This document references an early terrain simulation framework. Internal logs
+        suggest emergent system-level behavior observed in isolated builds. The origin
+        of these data fragments is unclear.
+      </p>
+
+      <a class="download" href="https://drive.google.com/your_share_link_here" target="_blank" rel="noopener">Download New_World.zip</a>
+
+      <div id="whisperWrap" class="whisper"></div>
+    </main>
+
+    <footer>© 2011 Mojang Systems — Build ID 0xA98F | Authorized Access Only</footer>
+  </div>
+
+  <!-- Hidden ARG layer -->
+  <!-- check /depth for legacy builds -->
+  <!-- DATASET_STATUS: PARTIAL -->
+  <!-- build_ref: a98f-legacy -->
+  <!-- last_sync: 2011-11-02T23:17Z -->
+  <!-- corrupt_header(true): 0x4A 0x52 0x43 0x48 -->
+  <!-- note: anomaly triggers after player idles 74s -->
+  <!-- fragment_03 -->
+  <!-- the seed dreams even when no one plays -->
+
+<script>
+/*
+  Full JS obfuscation system:
+  - Builds per-char spans for each element
+  - Uses requestAnimationFrame for smooth updates
+  - Fast obfuscation by default
+  - Occasional full reveal pulse (1s)
+  - Hover/touch intensifies (faster + more chaotic)
+  - Two elements: ARCHITECT and "ARCHITECT: they see you too"
+*/
+
+(function(){
+  const glyphs = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789█▓▒░<>/\\[]{}()@#%&*+=-_^:;,.';
+  function rnd(){ return glyphs[Math.floor(Math.random()*glyphs.length)]; }
+
+  // config for the two obfuscated elements
+  const configs = [
+    {
+      elId: 'archWrap',
+      text: 'ARCHITECT',
+      updateMs: 28,         // fast default
+      revealProb: 0.10,
+      hoverMs: 10,
+      hoverRevealProb: 0.04,
+      pulseMin: 3500,
+      pulseMax: 9000
+    },
+    {
+      elId: 'whisperWrap',
+      text: 'ARCHITECT: they see you too',
+      updateMs: 36,
+      revealProb: 0.12,
+      hoverMs: 12,
+      hoverRevealProb: 0.05,
+      pulseMin: 4200,
+      pulseMax: 10000
+    }
+  ];
+
+  configs.forEach(cfg => initObf(cfg));
+
+  function initObf(cfg){
+    const container = document.getElementById(cfg.elId);
+    if(!container) return;
+    const base = cfg.text;
+    // build spans per char
+    container.innerHTML = '';
+    const spans = [];
+    for(let i=0;i<base.length;i++){
+      const s = document.createElement('span');
+      const ch = base[i];
+      s.dataset.true = ch;
+      s.textContent = (ch === ' ') ? ' ' : rnd();
+      // slightly reduce opacity for random glyphs to feel 'noisy'
+      s.style.opacity = (ch === ' ') ? '1' : '1';
+      container.appendChild(s);
+      spans.push(s);
+    }
+
+    let lastUpdate = performance.now();
+    let hover = false;
+    let running = true;
+    const updateMs = cfg.updateMs;
+    let revealProb = cfg.revealProb;
+    let nextPulse = Date.now() + (cfg.pulseMin + Math.random()*(cfg.pulseMax - cfg.pulseMin));
+
+    function step(now){
+      // update every updateMs (or cfg.hoverMs if hovered)
+      const localInterval = hover ? cfg.hoverMs : updateMs;
+      if(now - lastUpdate >= localInterval){
+        for(let i=0;i<spans.length;i++){
+          const trueChar = spans[i].dataset.true;
+          if(trueChar === ' ') { spans[i].textContent = ' '; continue; }
+          const localReveal = hover ? cfg.hoverRevealProb : revealProb;
+          if(Math.random() < localReveal) spans[i].textContent = trueChar;
+          else spans[i].textContent = rnd();
+        }
+        lastUpdate = now;
+      }
+
+      // pulse check
+      if(Date.now() >= nextPulse){
+        // reveal true text for 1 second
+        spans.forEach(s => s.textContent = s.dataset.true);
+        container.classList.add('pulse-true');
+        setTimeout(()=>{
+          container.classList.remove('pulse-true');
+          // schedule next pulse
+          nextPulse = Date.now() + (cfg.pulseMin + Math.random()*(cfg.pulseMax - cfg.pulseMin));
+        }, 1000);
+      }
+
+      if(running) requestAnimationFrame(step);
+    }
+
+    // hover/touch handlers
+    function onEnter(){ hover = true; container.style.textShadow = '0 0 8px rgba(179,0,0,0.06)'; }
+    function onLeave(){ hover = false; container.style.textShadow = ''; }
+
+    container.addEventListener('mouseenter', onEnter);
+    container.addEventListener('mouseleave', onLeave);
+    container.addEventListener('touchstart', onEnter, {passive:true});
+    container.addEventListener('touchend', onLeave, {passive:true});
+
+    // start the loop
+    requestAnimationFrame(step);
+
+    // attach small API for possible external control
+    container.__obf = {
+      pulseNow(){
+        nextPulse = Date.now();
+      },
+      stop(){
+        running = false;
+      }
+    };
+  }
+
+  // small behavior: when page becomes visible, small chance to pulse both
+  document.addEventListener('visibilitychange', ()=>{
+    if(document.visibilityState === 'visible'){
+      if(Math.random() < 0.3){
+        const a = document.getElementById('archWrap');
+        const w = document.getElementById('whisperWrap');
+        if(a && a.__obf) a.__obf.pulseNow();
+        if(w && w.__obf) w.__obf.pulseNow();
+      }
+    }
+  });
+})();
+</script>
+</body>
+</html>
